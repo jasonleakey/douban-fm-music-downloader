@@ -1,6 +1,7 @@
 *.mp3
 *.log
 .idea/workspace.xml
+*.out
 
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
