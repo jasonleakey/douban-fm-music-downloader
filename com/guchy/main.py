@@ -41,8 +41,8 @@ for i in range(24):
         logging.debug("File:" + filename)
         try:
             if os.path.exists(filename):
-                logging.warn('File exists')
-                break
+                logging.warning('File exists')
+                pass
             ur.urlretrieve(i['url'], filename, reporthook=reporthook)
             logging.info("done")
             if os.path.getsize(filename) < 300:
