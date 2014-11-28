@@ -14,6 +14,7 @@ for i in range(24):
     a = json.loads(a)
     for i in a['song']:
         filename = i['artist'] + '-' + i['title'] + '.mp3'
+        filename = filename.replace('/', '-')
         print('Downloading:', 'Artist: ' + i['artist'], 'Song: ' + i['albumtitle'], 'URL: ' + i['url'],
               sep='\n', end = '\n\n')
         try:
