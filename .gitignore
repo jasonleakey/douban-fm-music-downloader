@@ -1,4 +1,5 @@
 *.mp3
+*.log
 .idea/workspace.xml
 
 ### JetBrains template

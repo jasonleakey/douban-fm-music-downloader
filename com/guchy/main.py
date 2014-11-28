@@ -2,28 +2,53 @@ __author__ = 'jasonhuang'
 
 import urllib.request as ur
 import json, os, sys
+import socket
+import logging
+
+def reporthook(blocknum, blocksize, totalsize):
+    readsofar = blocknum * blocksize
+    if totalsize > 0:
+        percent = readsofar * 1e2 / totalsize
+        s = "\r%5.1f%% %*d / %d" % (
+            percent, len(str(totalsize)), readsofar, totalsize)
+        sys.stdout.write(s)
+        if readsofar >= totalsize: # near the end
+            sys.stdout.write("\n")
+    else: # total size is unknown
+        sys.stdout.write("read %d\n" % (readsofar,))
 
 os.chdir(sys.path[0])
-
 t = r'http://douban.fm/j/mine/playlist?type=n&channel='
+logging.basicConfig(filename="main.log", level=logging.DEBUG)
 
+
+# set network timeout as 30 secs.
+# download a file should not take that long.
+socket.setdefaulttimeout(30)
 for i in range(24):
     url = t + str(i)
-    print(url)
+    logging.debug("\n")
+    logging.debug(url)
     a = ur.urlopen(url).read().decode().replace('\\', '')
     a = json.loads(a)
     for i in a['song']:
         filename = i['artist'] + '-' + i['title'] + '.mp3'
         filename = filename.replace('/', '-')
-        print('Downloading:', 'Artist: ' + i['artist'], 'Song: ' + i['albumtitle'], 'URL: ' + i['url'],
-              sep='\n', end = '\n\n')
+        logging.debug('Downloading:')
+        logging.debug('Artist: ' + i['artist'])
+        logging.debug('Song: ' + i['title'])
+        logging.debug('URL: ' + i['url'])
+        logging.debug("File:" + filename)
         try:
             if os.path.exists(filename):
-                print('Existing')
+                logging.warn('File exists')
                 break
-            ur.urlretrieve(i['url'], filename)
+            ur.urlretrieve(i['url'], filename, reporthook=reporthook)
+            logging.info("done")
             if os.path.getsize(filename) < 300:
                 os.system('del ' + filename)
         except Exception as a:
-            print (a)
+            logging.error(a)
+            logging.info("fail")
             pass
+
