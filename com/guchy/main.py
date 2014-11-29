@@ -37,7 +37,9 @@ for i in [ CHANNEL_CHINESE, CHANNEL_ENGLISH, CHANNEL_70, CHANNEL_80, CHANNEL_90 
     a = ur.urlopen(url).read().decode().replace('\\', '')
     a = json.loads(a)
     for i in a['song']:
-        filename = i['artist'] + '-' + i['title'] + '.mp3'
+        audio_url = i['url']
+        extension = audio_url[audio_url.rfind("."):]
+        filename = i['artist'] + '-' + i['title'] + extension
         filename = filename.replace('/', '-')
         logging.debug('Downloading:')
         logging.debug('Artist: ' + i['artist'])
