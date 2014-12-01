@@ -4,6 +4,7 @@ import urllib.request as ur
 import json, os, sys
 import socket
 import logging
+import subprocess
 
 def reporthook(blocknum, blocksize, totalsize):
     readsofar = blocknum * blocksize
@@ -41,16 +42,23 @@ for i in [ CHANNEL_CHINESE, CHANNEL_ENGLISH, CHANNEL_70, CHANNEL_80, CHANNEL_90 
         extension = audio_url[audio_url.rfind("."):]
         filename = i['artist'] + '-' + i['title'] + extension
         filename = filename.replace('/', '-')
+        filename_mp3 = (i['artist'] + '-' + i['title'] + '.mp3').replace('/', '-')
         logging.debug('Downloading:')
         logging.debug('Artist: ' + i['artist'])
         logging.debug('Song: ' + i['title'])
         logging.debug('URL: ' + i['url'])
         logging.debug("File:" + filename)
         try:
-            if os.path.exists(filename):
+            if os.path.exists(filename) or os.path.exists(filename_mp3):
                 logging.warning('File exists')
                 pass
             ur.urlretrieve(i['url'], filename, reporthook=reporthook)
+            if extension != '.mp3':
+                print('converting' + extension + ' to mp3')
+                if subprocess.call(['avconv', '-i', filename, '-f', 'mp3', '-y', '-vn', '-ab', '70000', filename_mp3]) == 0:
+                    # remove old file.
+                    print('remove' + extension + ' file')
+                    os.remove(filename)
             logging.info("done")
             if os.path.getsize(filename) < 300:
                 os.system('del ' + filename)
