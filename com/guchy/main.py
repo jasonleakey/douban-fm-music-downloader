@@ -55,10 +55,10 @@ for i in [ CHANNEL_CHINESE, CHANNEL_ENGLISH, CHANNEL_70, CHANNEL_80, CHANNEL_90 
                 pass
             ur.urlretrieve(i['url'], filename, reporthook=reporthook)
             if extension != '.mp3':
-                print('converting' + extension + ' to mp3')
+                logging.debug('converting' + extension + ' to mp3')
                 if subprocess.call(['avconv', '-i', filename, '-f', 'mp3', '-y', '-vn', '-ab', '70000', filename_mp3]) == 0:
                     # remove old file.
-                    print('remove' + extension + ' file')
+                    logging.debug('remove' + extension + ' file')
                     os.remove(filename)
             logging.info("done")
             if os.path.getsize(filename) < 300:
