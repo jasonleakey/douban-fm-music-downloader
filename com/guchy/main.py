@@ -25,7 +25,8 @@ CHANNEL_ENGLISH = 2
 CHANNEL_70 = 3
 CHANNEL_80 = 4
 CHANNEL_90 = 5
-logging.basicConfig(filename="main.log", level=logging.DEBUG)
+logging.basicConfig(filename="main.log", level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s',
+                    datefmt='%a, %d %b %Y %H:%M:%S',)
 
 
 # set network timeout as 30 secs.
