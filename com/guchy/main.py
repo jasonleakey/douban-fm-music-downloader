@@ -61,8 +61,10 @@ for i in [ CHANNEL_CHINESE, CHANNEL_ENGLISH, CHANNEL_70, CHANNEL_80, CHANNEL_90 
                     logging.debug('remove' + extension + ' file')
                     os.remove(filename)
             logging.info("done")
-            if os.path.getsize(filename) < 300:
-                os.system('del ' + filename)
+            if os.path.exists(filename) and os.path.getsize(filename) < 300:
+                os.remove(filename)
+            if os.path.exists(filename_mp3) and os.path.getsize(filename_mp3) < 300:
+                os.remove(filename_mp3)
         except Exception as a:
             logging.error(a)
             logging.info("fail")
